@@ -1,424 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Love</title>
-    <style>
-        /* --- CSS Styles --- */
-        :root {
-            --primary-color: #ff6b81;
-            --secondary-color: #ffccd5;
-            --text-color: #555;
-            --success-color: #2ecc71;
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            --heart-bg: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 3.22l-.61-.6a5.5 5.5 0 0 0-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 0 0-7.78-7.77l-.61.6z" fill="%23ffccd5" opacity="0.4"/></svg>');
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For My Aasu💓💓</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-gradient);
-            background-image: var(--heart-bg);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text-color);
-            overflow: hidden;
-        }
+    body {
+      height: 100vh;
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      overflow: hidden;
+      color: #fff;
+    }
 
-        /* Floating Hearts Animation Background */
-        .bg-hearts {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2; /* rain above text */
+      pointer-events: none;
+    }
 
-        .bg-heart {
-            position: absolute;
-            bottom: -10px;
-            width: 20px;
-            height: 20px;
-            background-color: var(--primary-color);
-            opacity: 0.5;
-            clip-path: path("M10 3.22l-.61-.6a5.5 5.5 0 0 0-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 0 0-7.78-7.77l-.61.6z");
-            animation: floatUp 10s linear infinite;
-        }
+    .text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+      z-index: 1;
+    }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-        }
+    .text-content {
+      max-width: 900px;
+      animation: fadeIn 2s ease;
+    }
 
-        /* Main Container */
-        .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            border: 3px solid var(--secondary-color);
-        }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 24px;
+      color: #ffb7c5;
+      text-shadow: 0 0 20px rgba(255,183,197,0.4);
+    }
 
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
+    p {
+      font-size: 1.15rem;
+      line-height: 1.9;
+      opacity: 0.95;
+      text-shadow: 0 0 15px rgba(0,0,0,0.6);
+    }
 
-        .main-message {
-            font-size: 1.2em;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
+    .signature {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      color: #ffd1dc;
+    }
 
-        /* Cute Quote Box */
-        .quote-box {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            padding: 15px;
-            border-radius: 10px;
-            font-style: italic;
-            margin-bottom: 30px;
-            font-size: 0.9em;
-        }
-
-        /* Button Area */
-        .action-area h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        button {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 80%;
-            max-width: 300px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        #btn-given {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        #btn-given:hover {
-            transform: scale(1.05);
-            background-color: #ff4757;
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-
-        #btn-not-given {
-            background-color: #e1e1e1;
-            color: #777;
-        }
-
-        #btn-not-given:hover {
-            background-color: #d1d1d1;
-        }
-
-        /* Success Screen (Hidden initially) */
-        #success-container {
-            display: none;
-            text-align: center;
-        }
-
-        #success-container h1 {
-            color: var(--success-color);
-        }
-        
-        .big-heart-emoji {
-            font-size: 100px;
-            animation: beat 1.2s infinite alternate;
-        }
-
-        @keyframes beat {
-            to { transform: scale(1.2); }
-        }
-
-        /* Responsive adjustments */
-        @media (min-width: 600px) {
-            .buttons {
-                flex-direction: row;
-            }
-            button {
-                width: auto;
-            }
-        }
-    </style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .actions{margin-top:28px;display:flex;gap:18px;justify-content:center;align-items:center}
+  #yesBtn{padding:16px 28px;font-size:1.15rem;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(135deg,#ffb7c5,#ffd1dc);color:#3b0f1e;box-shadow:0 10px 30px rgba(255,183,197,.5);transform:scale(1.08)}
+  #noBtn{padding:8px 14px;font-size:.8rem;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;opacity:.6;cursor:pointer}
+  #yesBtn:hover{transform:scale(1.15)}
+  #noBtn:hover{opacity:.85}
+</style>
 </head>
 <body>
+  <canvas id="sakura"></canvas>
 
-    <div class="bg-hearts" id="bg-hearts"></div>
-
-    <div class="container" id="main-container">
-        <h1>I'm So Sorry... 🥺</h1>
-        
-        <div class="quote-box" id="random-quote">
-            "Whatever souls are made of, yours and mine are the same."
-        </div>
-
-        <p class="main-message" id="pleading-message">
-            I messed up, and my heart hurts knowing I hurt you. You mean the world to me. I am asking for your forgiveness and just one last chance to make things right.
-        </p>
-
-        <div class="action-area">
-            <h2 id="question-text">Will you give me one last chance?</h2>
-            <div class="buttons">
-                <button id="btn-given">Yes, One Last Chance! ❤️</button>
-                <button id="btn-not-given">Not Given 💔</button>
-            </div>
-        </div>
+  <div class="text">
+    <div class="text-content">
+      <h1>For My Aasu 💓</h1>
+      <p>
+        Aasu… maine tumhe itna hurt kiya ki tumhari khamoshi
+        meri sabse badi saza ban gayi.
+        <br /><br />
+        Aaj jab tum mujhse door ho,
+        tab samajh aaya ki tum meri zindagi ka sirf hissa nahi,
+        balki meri poori zarurat ho.
+        <br /><br />
+        Main yeh wada nahi karta ki main perfect hoon,
+        par yeh wada zaroor karta hoon
+        ki main tumhari kadar karna seekh chuka hoon.
+        <br /><br />
+        Agar abhi bhi kahin dil ke kone mein
+        mere liye thodi si jagah bachi ho,
+        toh main poori zindagi us jagah ko sambhal ke rakhunga.
+        <br /><br />
+        Main bas ek mauka maang raha hoon —
+        sab kuch theek karne ka nahi,
+        balki dheere-dheere phir se tumhara bharosa jeetne ka.
+        Agar tum ek kadam bhi meri taraf badh pao,
+        toh main har kadam sirf tumhari izzat aur khushi ke liye rakhunga.
+      </p>
+      <div class="signature">— Tumhara Vedu</div>
+      <div class="actions">
+        <button id="yesBtn">Give me one last chance</button>
+        <button id="noBtn">No</button>
+      </div>
     </div>
+  </div>
 
-    <div class="container" id="success-container">
-        <div class="big-heart-emoji">💖</div>
-        <h1 id="success-title">THANK YOU!</h1>
-        <p class="main-message" id="success-text">
-            You won't regret this. I promise to cherish this chance and you, forever. I love you so much!
-        </p>
-        <div class="big-heart-emoji">🎉</div>
-    </div>
+  <script>
+    const canvas = document.getElementById('sakura');
+    const ctx = canvas.getContext('2d');
 
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
 
-    <script>
-        /* --- JavaScript Logic --- */
+    const hearts = [];
 
-        // --- Data ---
+    function createHeart() {
+      return {
+        x: Math.random() * w,
+        y: Math.random() * h - h,
+        size: Math.random() * 10 + 8,
+        speed: Math.random() * 2 + 1,
+        drift: Math.random() * 1 - 0.5,
+        opacity: Math.random() * 0.5 + 0.4
+      };
+    }
 
-        // Cute love quotes to display randomly
-        const loveQuotes = [
-            "Every moment I spend with you, is like a beautiful dream come true.",
-            "I may not be perfect, but I love you with all my heart.",
-            "You are my today and all of my tomorrows.",
-            "If I had a flower for every time I thought of you... I could walk through my garden forever.",
-            "My heart is, and always will be, yours.",
-            "Sometimes I look at you and I wonder how I got so lucky."
-        ];
+    for (let i = 0; i < 120; i++) hearts.push(createHeart());
 
-        // The pleading messages for the loop when "Not Given" is clicked
-        const pleadingMessages = [
-            "Please? Pretty please with sugar on top? 🥺",
-            "My heart is literally breaking right now... 💔",
-            "I promise I'll make it up to you, just one tiny chance?",
-            "Don't be like this... look at this sad face 😿",
-            "Baby please... I can't imagine my life without you.",
-            "I'll do anything! I'll even watch that show you like! 📺",
-            "Just one last, final, super-duper chance? Please? ❤️",
-            "Okay, I'm getting desperate here... I love you! Please forgive me!"
-        ];
+    function drawHeart(x, y, size, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 16, size / 16);
+      ctx.beginPath();
+      ctx.moveTo(0, 4);
+      ctx.bezierCurveTo(0, -4, -8, -4, -8, 2);
+      ctx.bezierCurveTo(-8, 8, 0, 12, 0, 16);
+      ctx.bezierCurveTo(0, 12, 8, 8, 8, 2);
+      ctx.bezierCurveTo(8, -4, 0, -4, 0, 4);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255,183,197,${opacity})`;
+      ctx.fill();
+      ctx.restore();
+    }
 
-        // A flag key in localStorage to track reload/attempts
-        const STORAGE_COUNT_KEY = 'notGivenCount';
-        const STORAGE_STATE_KEY = 'notGivenState';
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
 
-        // --- DOM Elements ---
-        const mainContainer = document.getElementById('main-container');
-        const successContainer = document.getElementById('success-container');
-        const btnGiven = document.getElementById('btn-given');
-        const btnNotGiven = document.getElementById('btn-not-given');
-        const questionText = document.getElementById('question-text');
-        const quoteBox = document.getElementById('random-quote');
-        const bgHeartsContainer = document.getElementById('bg-hearts');
+      hearts.forEach(hd => {
+        drawHeart(hd.x, hd.y, hd.size, hd.opacity);
+        hd.y += hd.speed;
+        hd.x += hd.drift;
 
-        let pleadIndex = 0;
-
-        // --- Functions ---
-
-        // Set a random quote on load
-        function setRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * loveQuotes.length);
-            quoteBox.textContent = `"${loveQuotes[randomIndex]}"`;
+        if (hd.y > h) {
+          hd.y = -20;
+          hd.x = Math.random() * w;
         }
+      });
 
-        // Create background floating hearts
-        function createFloatingHearts() {
-            for (let i = 0; i < 15; i++) {
-                const heart = document.createElement('div');
-                heart.classList.add('bg-heart');
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = Math.random() * 5 + 5 + 's';
-                heart.style.animationDelay = Math.random() * 5 + 's';
-                bgHeartsContainer.appendChild(heart);
-            }
-        }
+      requestAnimationFrame(animate);
+    }
 
-        // --- Event Listeners ---
+    animate();
 
-        // Initialize on load
-        setRandomQuote();
-        createFloatingHearts();
-        // If the user previously clicked "Not Given" we persist attempts in localStorage
-        function getNotGivenCount() {
-            return parseInt(localStorage.getItem(STORAGE_COUNT_KEY) || '0', 10);
-        }
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+    const msg = document.querySelector('.text-content p');
+    const yes = document.getElementById('yesBtn');
+    const no = document.getElementById('noBtn');
+    let tries = 0;
 
-        function setNotGivenCount(n) {
-            localStorage.setItem(STORAGE_COUNT_KEY, String(n));
-        }
+    yes.addEventListener('click',()=>{
+      msg.innerHTML += '<br /><br /><strong>Thank you for choosing hope.</strong> Main sabr se, izzat se, aur dil se tumhara saath nibhaunga.';
+      yes.innerText = 'I won\'t waste this chance';
+      yes.style.transform='scale(1.25)';
+    });
 
-        function setNotGivenState(state) {
-            localStorage.setItem(STORAGE_STATE_KEY, state);
-        }
+    no.addEventListener('click',()=>{
+      tries++;
+      const lines = [
+        'Main samajhta hoon tumhara dard. Par ek mauka mujhe yeh dikhane de ki main badal chuka hoon.',
+        'Yeh sirf maafi nahi hai—yeh zimmedari hai jo main poori zindagi uthane ko tayyar hoon.',
+        'Agar aaj nahi, toh kal. Main yahin rahunga—tumhari pace par.'
+      ];
+      msg.innerHTML += `<br /><br /><em>${lines[Math.min(tries-1, lines.length-1)]}</em>`;
+      yes.style.transform = `scale(${1.15 + tries*0.08})`;
+      no.style.opacity = Math.max(.2, .6 - tries*0.15);
+    });
 
-        function getNotGivenState() {
-            return localStorage.getItem(STORAGE_STATE_KEY) || null;
-        }
-
-        // Action when "Not Given" is clicked: increment count and reload the page
-        btnNotGiven.addEventListener('click', function() {
-            const count = getNotGivenCount() + 1;
-            setNotGivenCount(count);
-            setNotGivenState('pending');
-            // reload to simulate the requested behavior
-            window.location.reload();
-        });
-
-        // Action when "Given" is clicked (Success)
-        btnGiven.addEventListener('click', function() {
-            onAccepted();
-        });
-
-        // Handle acceptance (either from "Given" or modal "Accept")
-        function onAccepted() {
-            // Clear tracking
-            localStorage.removeItem(STORAGE_COUNT_KEY);
-            setNotGivenState('accepted');
-
-            // Show final congratulations message as requested
-            mainContainer.style.display = 'none';
-            successContainer.style.display = 'block';
-
-            // Replace success text with the exact message the user asked for
-            const successTitle = document.getElementById('success-title');
-            const successText = document.getElementById('success-text');
-            successTitle.textContent = '';
-            successText.textContent = 'Congratulations, Now he is your forever and you are his forever';
-
-            triggerConfetti();
-        }
-
-
-        // Simple CSS Confetti Effect function
-        function triggerConfetti() {
-            const colors = ['#ff6b81', '#2ecc71', '#3498db', '#f1c40f'];
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.width = '10px';
-                confetti.style.height = '10px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.top = '-10px';
-                confetti.style.borderRadius = '50%';
-                confetti.style.zIndex = '1000';
-                document.body.appendChild(confetti);
-
-                const animation = confetti.animate([
-                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
-                    { transform: `translate(${Math.random() * 200 - 100}px, 100vh) rotate(720deg)`, opacity: 0 }
-                ], {
-                    duration: Math.random() * 2000 + 1500,
-                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                });
-
-                animation.onfinish = () => confetti.remove();
-            }
-        }
-
-        // --- Modal / Reload loop handling ---
-        // Create a simple modal overlay in JS so it appears after reloads
-        (function createModal() {
-            const modal = document.createElement('div');
-            modal.id = 'last-chance-modal';
-            modal.style.position = 'fixed';
-            modal.style.left = '0';
-            modal.style.top = '0';
-            modal.style.width = '100%';
-            modal.style.height = '100%';
-            modal.style.display = 'flex';
-            modal.style.alignItems = 'center';
-            modal.style.justifyContent = 'center';
-            modal.style.background = 'rgba(0,0,0,0.5)';
-            modal.style.zIndex = '2000';
-            modal.style.visibility = 'hidden';
-
-            modal.innerHTML = `
-                <div style="background: white; padding: 22px; border-radius: 12px; max-width: 420px; text-align:center;">
-                    <h3 style="color: var(--primary-color); margin-top:0;">Please, just one last chance</h3>
-                    <p id="modal-plead" style="margin:12px 0;">I really need you to say yes this time...</p>
-                    <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
-                        <button id="modal-accept" style="padding:10px 18px; border-radius:8px; background:var(--primary-color); color:white; border:none;">Accept ❤️</button>
-                        <button id="modal-notyet" style="padding:10px 18px; border-radius:8px; background:#e1e1e1; color:#333; border:none;">Not Yet 💔</button>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            // Hook up modal buttons
-            const modalAccept = document.getElementById('modal-accept');
-            const modalNotYet = document.getElementById('modal-notyet');
-            const modalPlead = document.getElementById('modal-plead');
-
-            modalAccept.addEventListener('click', function() {
-                setNotGivenState('accepted');
-                localStorage.removeItem(STORAGE_COUNT_KEY);
-                modal.style.visibility = 'hidden';
-                onAccepted();
-            });
-
-            modalNotYet.addEventListener('click', function() {
-                // increment attempts and reload again
-                const count = getNotGivenCount() + 1;
-                setNotGivenCount(count);
-                modal.style.visibility = 'hidden';
-                window.location.reload();
-            });
-
-            // Expose show function
-            window.showLastChanceModal = function(count) {
-                // choose a pleading message based on count
-                const idx = (count - 1) % pleadingMessages.length;
-                modalPlead.textContent = pleadingMessages[idx];
-                modal.style.visibility = 'visible';
-            };
-        })();
-
-        // After load, if there were previous "Not Given" attempts and not yet accepted, show modal
-        (function handleReloadedAttempts() {
-            const count = getNotGivenCount();
-            const state = getNotGivenState();
-            if (count > 0 && state !== 'accepted') {
-                // Hide the main question area to focus on modal
-                // but keep background visible
-                // Show modal pleading for acceptance
-                window.showLastChanceModal(count);
-            }
-        })();
-
-    </script>
+</script>
 </body>
 </html>
