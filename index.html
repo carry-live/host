@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>For My Aasu💓💓</title>
-  <audio src="take 1.mp3" autoplay loop></audio>   
   <style>
     * {
       margin: 0;
@@ -125,6 +124,18 @@
         <button id="yesBtn">Give me one last chance</button>
         <button id="noBtn">No</button>
       </div>
+      <!-- Audio element and user-visible status (single element) -->
+      <audio id="bgAudio" src="take%201.mp3" preload="auto" loop playsinline autoplay muted></audio>
+      <div id="audioStatus" aria-live="polite" style="margin-top:12px;color:#ffd1dc;font-size:.95rem;opacity:.95"></div>
+    </div>
+  </div>
+
+  <!-- Fullscreen tap-to-unmute overlay (required on many mobile browsers to enable audible playback) -->
+  <div id="tapOverlay" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.4));backdrop-filter:blur(4px);">
+    <div style="text-align:center;color:#fff;padding:20px;max-width:360px;margin:0 16px;border-radius:12px;">
+      <h2 style="margin-bottom:8px;font-size:1.2rem;color:#ffd1dc">Tap to enable music</h2>
+      <p style="margin-bottom:14px;opacity:.9">Tap anywhere to allow background music to play. This is required by mobile browser policies.</p>
+      <button id="overlayBtn" style="padding:12px 18px;border-radius:10px;border:none;background:#ffb7c5;color:#3b0f1e;font-weight:700;cursor:pointer">Tap to Play</button>
     </div>
   </div>
 
@@ -211,6 +222,115 @@
       yes.style.transform = `scale(${1.15 + tries*0.08})`;
       no.style.opacity = Math.max(.2, .6 - tries*0.15);
     });
+
+    // --- Audio play diagnostics and autoplay attempt ---
+    const bgAudio = document.getElementById('bgAudio');
+    const audioStatus = document.getElementById('audioStatus');
+
+    function reportAudioStatus(text) {
+      console.log('[AudioStatus]', text);
+      if (audioStatus) audioStatus.textContent = text;
+    }
+
+    async function tryPlayAudio() {
+      if (!bgAudio) return reportAudioStatus('No audio element found.');
+      // ensure reasonable volume
+      try {
+        bgAudio.volume = 0.8;
+            // Attempt to play (may be blocked if not a user gesture)
+            await bgAudio.play();
+            reportAudioStatus('Audio is playing.');
+      } catch (err) {
+        // Most likely an autoplay policy or network error. Show helpful info to user and console.
+        console.warn('Audio play failed:', err);
+        let msgText = 'Unable to start audio automatically.';
+        if (err && err.name) msgText += ` (${err.name})`;
+        // Check element error state (e.g., 404)
+        if (bgAudio.error) {
+          const code = bgAudio.error.code;
+          msgText += ` — media error code ${code}`;
+        }
+          msgText += ' Tap the screen or the "Give me one last chance" button to play.';
+        reportAudioStatus(msgText);
+      }
+    }
+
+    // Try to play when the user clicks the Yes button (explicit user gesture)
+    yes.addEventListener('click', () => {
+      tryPlayAudio();
+    });
+
+    // Also add a single-use global click to attempt play on first user interaction
+    function firstInteractionPlay() {
+      tryPlayAudio();
+      window.removeEventListener('click', firstInteractionPlay);
+    }
+    window.addEventListener('click', firstInteractionPlay, { once: true });
+
+    // Try to autoplay unmuted on load. If blocked, fall back to muted autoplay (silent) so the element is playing.
+    window.addEventListener('load', async () => {
+      if (!bgAudio) return;
+      // First confirm the audio file is reachable (helps diagnose 404/CORS)
+      const audioSrc = bgAudio.getAttribute('src');
+      try {
+        // try a HEAD request; if server doesn't support HEAD, fallback to GET with range
+        const head = await fetch(audioSrc, { method: 'HEAD' });
+        if (!head.ok) throw new Error('HEAD failed: ' + head.status);
+      } catch (eHead) {
+        try {
+          const get = await fetch(audioSrc, { method: 'GET', headers: { Range: 'bytes=0-1' } });
+          if (!get.ok) throw new Error('GET failed: ' + get.status);
+        } catch (eGet) {
+          console.warn('Audio file fetch check failed:', eHead, eGet);
+          reportAudioStatus('Audio file not reachable (404/CORS). Check file path or server.');
+          return; // don't continue trying to play if resource isn't reachable
+        }
+      }
+
+      // Try an audible autoplay first (likely blocked on mobile). If blocked, start muted autoplay so audio element is playing in background.
+      try {
+        bgAudio.muted = false;
+        bgAudio.volume = 0.8;
+        await bgAudio.play();
+        reportAudioStatus('Autoplay started and is audible.');
+      } catch (err) {
+        console.log('Unmuted autoplay blocked, attempting muted autoplay fallback:', err);
+        try {
+          bgAudio.muted = true;
+          bgAudio.volume = 0.8;
+          await bgAudio.play();
+          reportAudioStatus('Autoplay started muted (browser blocked audible autoplay).');
+        } catch (e2) {
+          console.log('Muted autoplay also blocked:', e2);
+          reportAudioStatus('Audio did not autoplay. A user interaction is required to start sound.');
+        }
+      }
+    });
+
+    // Overlay logic: when user taps overlay, unmute and play audible audio, then hide overlay
+    const tapOverlay = document.getElementById('tapOverlay');
+    const overlayBtn = document.getElementById('overlayBtn');
+
+    async function activateAudioFromGesture() {
+      if (!bgAudio) return;
+      try {
+        bgAudio.muted = false;
+        bgAudio.volume = 0.85;
+        await bgAudio.play();
+        reportAudioStatus('Audio unmuted and playing.');
+      } catch (err) {
+        console.warn('Play after gesture failed:', err);
+        reportAudioStatus('Could not start audible audio. It may still require interaction.');
+      }
+      if (tapOverlay) tapOverlay.style.display = 'none';
+      window.removeEventListener('click', activateAudioFromGesture);
+    }
+
+    // Clicking the overlay button or anywhere on the overlay will try to enable audio
+    if (overlayBtn) overlayBtn.addEventListener('click', activateAudioFromGesture);
+    if (tapOverlay) tapOverlay.addEventListener('click', activateAudioFromGesture);
+    // Also allow a general first interaction anywhere to activate audio
+    window.addEventListener('click', activateAudioFromGesture, { once: true });
 
 </script>
 </body>
